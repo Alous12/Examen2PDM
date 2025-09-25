@@ -1,4 +1,23 @@
 package com.calyrsoft.ucbp1.features.dollar.data.repository
 
-class DollarRepository {
+import com.calyrsoft.ucbp1.features.dollar.data.datasource.RealTimeRemoteDataSource
+import com.calyrsoft.ucbp1.features.dollar.domain.model.DollarModel
+import com.calyrsoft.ucbp1.features.dollar.domain.repository.IDollarRepository
+import com.calyrsoft.ucbp1.features.profile.domain.model.ProfileModel
+import com.calyrsoft.ucbp1.features.profile.domain.repository.IProfileRepository
+import kotlinx.coroutines.flow.Flow
+
+class DollarRepository(val realTimeRemoteDataSource: RealTimeRemoteDataSource): IDollarRepository {
+
+
+    override suspend fun getDollar(): Flow<DollarModel> {
+//        return flow {
+//            emit(DollarModel("123", "456"))
+//        }
+        return realTimeRemoteDataSource.getDollarUpdates()
+
+
+    }
 }
+
+

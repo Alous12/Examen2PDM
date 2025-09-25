@@ -7,8 +7,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.calyrsoft.ucbp1.features.cardexample.presentation.CardScreen
+import com.calyrsoft.ucbp1.features.dollar.presentation.DollarScreen
 import com.calyrsoft.ucbp1.features.github.presentation.GithubScreen
 import com.calyrsoft.ucbp1.features.profile.application.ProfileScreen
+import com.calyrsoft.ucbp1.features.movies.presentation.MovieScreen
 
 @Composable
 fun AppNavigation() {
@@ -16,7 +18,7 @@ fun AppNavigation() {
 
     NavHost(
         navController = navController,
-        startDestination = Screen.Github.route
+        startDestination = Screen.Dollar.route
     ) {
         composable(Screen.Github.route) {
             GithubScreen(modifier = Modifier)
@@ -28,6 +30,14 @@ fun AppNavigation() {
             ProfileScreen()
         }
 
+        composable(Screen.Movies.route)
+        {
+            MovieScreen()
+        }
         composable(Screen.CardExamples.route) { CardScreen() }
+
+        composable(Screen.Dollar.route){
+            DollarScreen()
+        }
     }
 }

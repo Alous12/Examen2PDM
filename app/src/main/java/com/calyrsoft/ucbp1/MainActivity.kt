@@ -11,6 +11,8 @@ import androidx.compose.ui.Modifier
 import com.calyrsoft.ucbp1.features.github.presentation.GithubScreen
 import com.calyrsoft.ucbp1.navigation.AppNavigation
 import com.calyrsoft.ucbp1.ui.theme.Ucbp1Theme
+import com.google.firebase.Firebase
+import com.google.firebase.database.database
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,6 +21,10 @@ class MainActivity : ComponentActivity() {
         setContent {
             AppNavigation()
         }
+
+
     }
+
+
 }
 

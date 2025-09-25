@@ -1,4 +1,6 @@
 package com.calyrsoft.ucbp1.features.movies.data.api.dto
 
-class MoviePageDto {
-}
+data class MoviePageDto(
+    val page: Int,
+    val results: List<MovieDto>
+)
