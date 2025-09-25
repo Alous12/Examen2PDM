@@ -4,5 +4,6 @@ data class DollarModel (
     val dollarOfficial: String? = null,
     val dollarParallel: String? = null,
     val USDT: String? = null,
-    val USDC: String? = null
+    val USDC: String? = null,
+    val Date: String? = null
 )

@@ -27,6 +27,7 @@ fun DollarScreen(viewModelDollar: DollarViewModel = koinViewModel()) {
                 Text("Cambio paralelo: " +stateValue.data.dollarParallel!!+" BS.")
                 Text("USDT: " + stateValue.data.USDT!! + " BS.")
                 Text("USDC: " + stateValue.data.USDC!! + "BS.")
+                Text("Fecha de actualizacion: " + stateValue.data.Date!!)
             }
         }
     }
