@@ -1,5 +1,7 @@
 package com.calyrsoft.ucbp1.di
 
+import android.app.Application
+import androidx.room.Room
 import com.calyrsoft.ucbp1.R
 import com.calyrsoft.ucbp1.features.dollar.data.datasource.RealTimeRemoteDataSource
 import com.calyrsoft.ucbp1.features.dollar.data.repository.DollarRepository
@@ -13,6 +15,9 @@ import com.calyrsoft.ucbp1.features.github.domain.repository.IGithubRepository
 import com.calyrsoft.ucbp1.features.github.domain.usecase.FindByNickNameUseCase
 import com.calyrsoft.ucbp1.features.github.presentation.GithubViewModel
 import com.calyrsoft.ucbp1.features.movies.data.api.MovieService
+import com.calyrsoft.ucbp1.features.movies.data.database.AppRoomDatabaseMovies
+import com.calyrsoft.ucbp1.features.movies.data.database.dao.IMovieDao
+import com.calyrsoft.ucbp1.features.movies.data.datasource.MovieLocalDataSource
 import com.calyrsoft.ucbp1.features.movies.data.datasource.MovieRemoteDataSource
 import com.calyrsoft.ucbp1.features.movies.data.repository.MovieRepository
 import com.calyrsoft.ucbp1.features.movies.domain.repository.IMovieRepository
@@ -36,11 +41,9 @@ object NetworkConstants {
     const val GITHUB_BASE_URL = "https://api.github.com/"
     const val RETROFIT_MOVIE = "RetrofitMovie"
     const val MOVIE_BASE_URL = "https://api.themoviedb.org/"
-
 }
 
 val appModule = module {
-
 
     // OkHttpClient
     single {
@@ -51,7 +54,7 @@ val appModule = module {
             .build()
     }
 
-    // Retrofit
+    // Retrofit GitHub
     single(named(NetworkConstants.RETROFIT_GITHUB)) {
         Retrofit.Builder()
             .baseUrl(NetworkConstants.GITHUB_BASE_URL)
@@ -60,7 +63,7 @@ val appModule = module {
             .build()
     }
 
-    // Retrofit
+    // Retrofit Movies
     single(named(NetworkConstants.RETROFIT_MOVIE)) {
         Retrofit.Builder()
             .baseUrl(NetworkConstants.MOVIE_BASE_URL)
@@ -69,38 +72,47 @@ val appModule = module {
             .build()
     }
 
-    // GithubService
+    // Github
     single<GithubService> {
-        get<Retrofit>( named(NetworkConstants.RETROFIT_GITHUB)).create(GithubService::class.java)
+        get<Retrofit>(named(NetworkConstants.RETROFIT_GITHUB)).create(GithubService::class.java)
     }
-    single{ GithubRemoteDataSource(get()) }
-    single<IGithubRepository>{ GithubRepository(get()) }
-
+    single { GithubRemoteDataSource(get()) }
+    single<IGithubRepository> { GithubRepository(get()) }
     factory { FindByNickNameUseCase(get()) }
     viewModel { GithubViewModel(get(), get()) }
 
+    // Profile
     single<IProfileRepository> { ProfileRepository() }
     factory { GetProfileUseCase(get()) }
     viewModel { ProfileViewModel(get()) }
 
-
-
+    // API Key
     single(named("apiKey")) {
         androidApplication().getString(R.string.api_key)
     }
-    single{ RealTimeRemoteDataSource() }
+
+    // Dollar
+    single { RealTimeRemoteDataSource() }
     single<IDollarRepository> { DollarRepository(get()) }
     factory { FetchDollarUseCase(get()) }
-    viewModel{ DollarViewModel(get()) }
+    viewModel { DollarViewModel(get()) }
 
     single<MovieService> {
         get<Retrofit>(named(NetworkConstants.RETROFIT_MOVIE)).create(MovieService::class.java)
     }
     single { MovieRemoteDataSource(get(), get(named("apiKey"))) }
-    single<IMovieRepository> { MovieRepository(get()) }
+
+    single {
+        Room.databaseBuilder(
+            androidApplication() as Application,
+            AppRoomDatabaseMovies::class.java,
+            "movies.db"
+        ).build()
+    }
+    single<IMovieDao> { get<AppRoomDatabaseMovies>().movieDao() }
+    single { MovieLocalDataSource(get()) }
+
+    single<IMovieRepository> { MovieRepository(get(), get()) }
     factory { GetPopularMoviesUseCase(get()) }
-    viewModel{ MoviesViewModel(get()) }
+    viewModel { MoviesViewModel(get()) }
 }
-
-
-

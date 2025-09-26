@@ -18,7 +18,7 @@ fun AppNavigation() {
 
     NavHost(
         navController = navController,
-        startDestination = Screen.Dollar.route
+        startDestination = Screen.Movies.route
     ) {
         composable(Screen.Github.route) {
             GithubScreen(modifier = Modifier)
