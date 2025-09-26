@@ -18,7 +18,7 @@ fun AppNavigation() {
 
     NavHost(
         navController = navController,
-        startDestination = Screen.Movies.route
+        startDestination = Screen.Dollar.route
     ) {
         composable(Screen.Github.route) {
             GithubScreen(modifier = Modifier)
@@ -27,17 +27,22 @@ fun AppNavigation() {
 
         }
         composable(Screen.Profile.route) {
-            ProfileScreen()
+            ProfileScreen(
+            )
         }
 
         composable(Screen.Movies.route)
         {
-            MovieScreen()
+            MovieScreen(
+                onBack = { navController.popBackStack() }
+            )
         }
         composable(Screen.CardExamples.route) { CardScreen() }
 
         composable(Screen.Dollar.route){
-            DollarScreen()
+            DollarScreen(
+                onOpenMovies = { navController.navigate(Screen.Movies.route) }
+            )
         }
     }
 }

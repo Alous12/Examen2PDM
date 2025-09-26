@@ -14,28 +14,55 @@ import coil3.compose.AsyncImage
 import com.calyrsoft.ucbp1.features.movies.domain.model.MovieModel
 import org.koin.androidx.compose.koinViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MovieScreen(
     modifier: Modifier = Modifier,
-    vm: MoviesViewModel = koinViewModel()
+    vm: MoviesViewModel = koinViewModel(),
+    onBack: () -> Unit = {}
 ) {
     val state by vm.state.collectAsState()
 
     LaunchedEffect(Unit) { vm.load() }
 
-    when (val s = state) {
-        is MoviesUiState.Loading, MoviesUiState.Idle -> {
-            Box(modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator()
-            }
+    // TopAppBar siempre visible
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Películas") },
+                navigationIcon = {
+                    TextButton(onClick = onBack) { Text("← Atrás") }
+                }
+            )
         }
-        is MoviesUiState.Error -> {
-            Box(modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text("Error: ${s.message}")
+    ) { padding ->
+        when (val s = state) {
+            is MoviesUiState.Loading, MoviesUiState.Idle -> {
+                Box(
+                    modifier = modifier
+                        .fillMaxSize()
+                        .padding(padding),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
             }
-        }
-        is MoviesUiState.Success -> {
-            MoviesGrid(movies = s.movies, modifier = modifier)
+            is MoviesUiState.Error -> {
+                Box(
+                    modifier = modifier
+                        .fillMaxSize()
+                        .padding(padding),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text("Error: ${s.message}")
+                }
+            }
+            is MoviesUiState.Success -> {
+                MoviesGrid(
+                    movies = s.movies,
+                    modifier = modifier.padding(padding)
+                )
+            }
         }
     }
 }
@@ -44,7 +71,9 @@ fun MovieScreen(
 private fun MoviesGrid(movies: List<MovieModel>, modifier: Modifier = Modifier) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(3),
-        modifier = modifier.fillMaxSize().padding(8.dp),
+        modifier = modifier
+            .fillMaxSize()
+            .padding(8.dp),
         contentPadding = PaddingValues(4.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -69,7 +98,9 @@ private fun MovieCard(movie: MovieModel) {
             movie.title,
             style = MaterialTheme.typography.bodySmall,
             textAlign = TextAlign.Center,
-            modifier = Modifier.fillMaxWidth().padding(top = 6.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 6.dp)
         )
     }
 }

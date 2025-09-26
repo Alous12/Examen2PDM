@@ -25,7 +25,8 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun ProfileScreen(
-    profileViewModel: ProfileViewModel = koinViewModel()
+    profileViewModel: ProfileViewModel = koinViewModel(),
+
 ) {
     val state = profileViewModel.state.collectAsState()
 
@@ -38,6 +39,7 @@ fun ProfileScreen(
         ProfileViewModel.ProfileUiState.Init -> Text("")
         ProfileViewModel.ProfileUiState.Loading -> CircularProgressIndicator()
         is ProfileViewModel.ProfileUiState.Success -> {
+
             Column(
                 modifier = Modifier
                     .fillMaxWidth()

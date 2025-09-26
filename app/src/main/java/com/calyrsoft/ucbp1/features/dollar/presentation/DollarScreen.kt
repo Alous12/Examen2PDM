@@ -17,7 +17,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun DollarScreen(viewModelDollar: DollarViewModel = koinViewModel()) {
+fun DollarScreen(viewModelDollar: DollarViewModel = koinViewModel(),
+        onOpenMovies: () -> Unit = {}) {
     val state = viewModelDollar.uiState.collectAsState()
 
     when (val s = state.value) {
@@ -32,6 +33,12 @@ fun DollarScreen(viewModelDollar: DollarViewModel = koinViewModel()) {
         ) { CircularProgressIndicator() }
 
         is DollarViewModel.DollarUIState.Success -> {
+            androidx.compose.material3.Button(
+                onClick = onOpenMovies,
+                modifier = Modifier
+                    .padding(top = 16.dp)
+                    .fillMaxWidth()
+            ) { Text("Ver películas") }
             val data = s.data
             Column(
                 modifier = Modifier
